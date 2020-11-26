@@ -1,0 +1,24 @@
+
+.square {
+    position: relative;
+    width: 100%;
+  }
+  
+  .square:after {
+    content: '';
+    display: block;
+    padding-bottom: 25%;
+  }
+
+.result{
+    position: absolute;
+    height: 100%;
+    background-color: white;
+    border: solid 1px black;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin: 0px;
+}

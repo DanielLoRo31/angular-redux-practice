@@ -28,7 +28,7 @@ export class TemplateComponent implements OnInit {
     '=',
   ];
 
-  @Select(CalculadoraState.getResult) result$: Observable<Number>
+ 
 
   
 
@@ -36,18 +36,4 @@ export class TemplateComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async onValidate() {
-    try {
-      const result = await this.result$.toPromise()
-      if (result === null) {
-        return false
-      } else {
-        return true
-      }
-
-    } catch (error) {
-      console.log(error)
-    }
-    
-  }
 }

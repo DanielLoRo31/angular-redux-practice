@@ -70,7 +70,17 @@ export class CalculadoraState {
 
   @Action(AddOperatorAction)
   addOperator(ctx: StateContext<IRNumber>, action: AddOperatorAction) {
-    ctx.patchState({ Operator: action.operator });
+    const numbers = ctx.getState();
+    if (numbers.Operator != null) {
+      ctx.patchState({
+        FirstNumber: numbers.SecondNumber,
+        SecondNumber: null,
+        Operator: action.operator
+      });
+    } else  {
+      ctx.patchState({ Operator: action.operator });
+    }
+    
   }
 
   @Action(AddResultAction)
@@ -93,7 +103,7 @@ export class CalculadoraState {
     }
 
     //ctx.patchState({ Result: operator });
-    ctx.patchState({ SecondNumber: operator, Operator: null });
+    ctx.patchState({ SecondNumber: operator, Operator: null, FirstNumber: null });
   }
 
   @Action(ResetAction)

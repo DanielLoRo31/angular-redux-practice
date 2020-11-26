@@ -1,9 +1,6 @@
 
 <div class="div-center">
-    <div class="container-fluid result" >
-        <!-- <h4 *ngIf="onValidate()">Hola</h4> -->
-        <h4>{{result$ | async}}</h4>
-    </div>
+    <app-result></app-result>
     <div class="container-fluid p-0 m-0">
         <div class="row p-0 m-0">
             <app-button class="col-3 p-0 m-0" *ngFor="let content of contents" [content]="content"></app-button>

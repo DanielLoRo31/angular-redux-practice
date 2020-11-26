@@ -1,3 +1,5 @@
-<button class="button" (click)="onClick()">
-  {{ content }}
-</button>
+<div class="square"> 
+  <button class="button" [ngStyle]="{'background-color': addBackgroundColor() ? 'rgb(248, 192, 87)' : 'red', 'color': addBackgroundColor() ? 'black' : 'white'}" (click)="onClick()">
+    <h4>{{ content }}</h4>
+  </button>
+</div>

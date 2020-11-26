@@ -34,7 +34,22 @@ export class ButtonComponent implements OnInit {
     } else if (this.content != 'C') {
       this.store.dispatch(new AddResultAction());
     } else {
-      this.store.dispatch(new ResetAction())
+      this.store.dispatch(new ResetAction());
+    }
+  }
+
+  addBackgroundColor() {
+    if (
+      this.content != '+' &&
+      this.content != '-' &&
+      this.content != 'C' &&
+      this.content != '=' &&
+      this.content != '/' &&
+      this.content != 'X'
+    ) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
