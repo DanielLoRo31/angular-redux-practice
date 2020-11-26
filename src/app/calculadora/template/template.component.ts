@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { CalculadoraState } from 'src/app/models/calculadora/calculadora.redux';
+import { CalculadoraService } from 'src/app/services/calculadora/calculadora.service';
 
 @Component({
   selector: 'app-template',
@@ -9,31 +7,12 @@ import { CalculadoraState } from 'src/app/models/calculadora/calculadora.redux';
   styleUrls: ['./template.component.scss'],
 })
 export class TemplateComponent implements OnInit {
-  contents: String[] = [
-    '1',
-    '2',
-    '3',
-    '+',
-    '4',
-    '5',
-    '6',
-    '-',
-    '7',
-    '8',
-    '9',
-    'X',
-    'C',
-    '0',
-    '/',
-    '=',
-  ];
+  contents: String[]  
 
- 
+  constructor(private service: CalculadoraService) {}
 
-  
-
-  constructor() {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.contents = this.service.getAllData()
+  }
 
 }
