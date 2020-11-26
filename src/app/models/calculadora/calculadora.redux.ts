@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 
-export interface IRUser {
-  users: any[];
-  selectedId: number;
+export interface IRNumber {
+  FirstNumber: Number;
+  SecondNumber: Number;
+  Operator: String;
+  Result: number;
 }
 
-export class AddUserAction {
-  public static type = '[User] Add';
-  constructor(public user: any) {}
+export class AddNumberAction {
+  public static type = '[Number] Add Number';
+  constructor(public number: Number) {}
 }
 
-// export class UpdateUserAction {
-//   public static type = '[User] Update';
-//   constructor(public id: number, public user: Partial<IUser>) {}
-// }
-
-export class UpdateUserAction {
-  public static type = '[User] Update';
-  constructor(public user: any) {}
+export class AddOperatorAction {
+  public static type = '[Number] Add Operator';
+  constructor(public operator: String) {}
 }
 
-export class DeleteUserAction {
-  public static type = '[User] Delete';
-  constructor(public id: number) {}
+export class AddResultAction {
+  public static type = '[Number] Add Result';
+  constructor() {}
 }
 
-@State<IRUser>({
-  name: 'userState',
+export class ResetAction {
+  public static type = '[Number] Reset';
+  constructor() {}
+}
+
+@State<IRNumber>({
+  name: 'calculadoraState',
   defaults: {
-    users: [],
-    selectedId: null,
+    FirstNumber: null,
+    SecondNumber: null,
+    Operator: null,
+    Result: null,
   },
 })
 @Injectable()
@@ -38,64 +42,67 @@ export class CalculadoraState {
   constructor() {}
 
   @Selector()
-  static getAllUsers(state: IRUser) {
-    return state.users;
+  static getResult(state: IRNumber) {
+    return state.SecondNumber;
   }
 
-  @Selector()
-  static getSelectedUser(state: IRUser) {
-    const index = state.users.findIndex((u) => u.id === state.selectedId);
-
-    if (index !== -1) {
-      return state.users[index];
+  @Action(AddNumberAction)
+  add(ctx: StateContext<IRNumber>, action: AddNumberAction) {
+    const numbers = ctx.getState();
+    if (numbers.Operator !== null && numbers.FirstNumber === null) {
+      if (numbers.FirstNumber === null && numbers.SecondNumber === null) {
+        ctx.patchState({ SecondNumber: action.number });
+      } else {
+        ctx.patchState({
+          FirstNumber: numbers.SecondNumber,
+          SecondNumber: action.number,
+        });
+      }
+    } else {
+      if (numbers.SecondNumber !== null) {
+        const second = '' + numbers.SecondNumber + action.number;
+        ctx.patchState({ SecondNumber: Number(second) });
+      } else {
+        ctx.patchState({ SecondNumber: action.number });
+      }
     }
   }
 
-  @Action(AddUserAction)
-  add(ctx: StateContext<IRUser>, action: AddUserAction) {
-    //ctx.dispatch //se manda llamar cualquier action ( cambio de estado )
-    //ctx.getState() // nos va a traer lo que tengamos en el estado
-    //ctx.patchState() //Meter un parcial de un estado, solo los elementos que queramos
-    //ctx.setState() //interfaz completa, u objeto completo, sustituir el estado
+  @Action(AddOperatorAction)
+  addOperator(ctx: StateContext<IRNumber>, action: AddOperatorAction) {
+    ctx.patchState({ Operator: action.operator });
+  }
 
-    //Set
+  @Action(AddResultAction)
+  addResult(ctx: StateContext<IRNumber>, action: AddResultAction) {
+    const numbers = ctx.getState();
+    var operator = null;
+    switch (numbers.Operator) {
+      case '+':
+        operator = +numbers.FirstNumber + +numbers.SecondNumber;
+        break;
+      case '-':
+        operator = +numbers.FirstNumber - +numbers.SecondNumber;
+        break;
+      case '/':
+        operator = +numbers.FirstNumber / +numbers.SecondNumber;
+        break;
+      case 'X':
+        operator = +numbers.FirstNumber * +numbers.SecondNumber;
+        break;
+    }
+
+    //ctx.patchState({ Result: operator });
+    ctx.patchState({ SecondNumber: operator, Operator: null });
+  }
+
+  @Action(ResetAction)
+  reset(ctx: StateContext<IRNumber>, action: ResetAction) {
     ctx.setState({
-      users: [...ctx.getState().users, action.user],
-      selectedId: action.user.id,
-    });
-    /*
-      //Patch
-      ctx.patchState({ users: [...ctx.getState().users, action.user] });
-    */
-  }
-
-  @Action(UpdateUserAction)
-  update(state: StateContext<IRUser>, action: UpdateUserAction) {
-    const users = [...state.getState().users];
-    const index = users.findIndex((u) => u.id == action.user.id);
-
-    if (index !== -1) {
-      users[index] = action.user;
-    }
-    state.setState({
-      users: users,
-      selectedId: action.user.id,
-    });
-  }
-
-  @Action(DeleteUserAction)
-  delete(state: StateContext<IRUser>, action: DeleteUserAction) {
-    const users = [...state.getState().users];
-    const index = users.findIndex((u) => u.id === action.id);
-
-    console.log(action.id, index)
-    if (index !== -1) {
-      users.splice(index, 1);
-    }
-
-    state.setState({
-      users,
-      selectedId: action.id,
+      FirstNumber: null,
+      SecondNumber: null,
+      Operator: null,
+      Result: null,
     });
   }
 }
